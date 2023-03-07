@@ -1,0 +1,58 @@
+Tasks from SQLAcademy https://sql-academy.org
+
+№33
+SELECT AVG(unit_price) as cost FROM Payments
+JOIN Goods ON Payments.good = Goods.good_id
+WHERE good_name LIKE "%caviar"
+
+№34
+SELECT COUNT(*) as count FROM class 
+WHERE name LIKE "10%"
+
+№35
+SELECT DISTINCT COUNT(classroom) as count FROM Schedule
+WHERE date = "2019-09-02"
+
+№36
+SELECT * FROM Student
+WHERE address LIKE "%Pushkin%"
+
+№37
+SELECT TIMESTAMPDIFF(year, MAX(birthday), NOW()) as 
+year FROM Student
+
+№40
+SELECT name as subjects FROM subject 
+JOIN Schedule ON Subject.id = Schedule.subject 
+JOIN Teacher ON Schedule.teacher = Teacher.id 
+WHERE last_name = "Romashkin"
+
+№42
+SELECT DISTINCT TIMEDIFF((SELECT end_pair FROM Timepair WHERE id = 4),
+  (SELECT start_pair FROM Timepair WHERE id = 2)) as time 
+  FROM Timepair;
+
+№43
+SELECT last_name FROM Teacher
+JOIN Schedule ON Schedule.teacher = Teacher.id 
+JOIN Subject ON Subject.id = Schedule.subject  
+WHERE name = "Physical Culture"
+ORDER BY last_name ASC;
+
+№55
+WITH useless_company as (SELECT COUNT(*) as count, Trip.company as company 
+FROM Trip
+GROUP BY company)
+
+DELETE FROM Company
+WHERE Company.id IN (
+    SELECT useless_company.company FROM (
+        SELECT useless_company.count, 
+            useless_company.company 
+        FROM useless_company 
+        GROUP BY useless_company.company
+        HAVING useless_company.count =( 
+            SELECT MIN(useless_company.count)
+            FROM useless_company)
+    ) as useless_company
+);
